@@ -7,6 +7,7 @@ import { ScorekeeperControls } from "./ScorekeeperControls";
 import { RosterGrid } from "./RosterGrid";
 import { PlayerActionGrid } from "./PlayerActionGrid";
 import { GameEventList } from "./GameEventList";
+import { EditEventModal } from "./EditEventModal";
 import { calculatePlayerOfTheGame } from "@/lib/calculations/playerOfTheGame";
 import { PlayerOfTheGameCard } from "@/components/statistics/PlayerOfTheGameCard";
 import { cn } from "@/lib/utils/cn";
@@ -29,6 +30,7 @@ export function ScorekeeperPanel({
 }) {
   const scorekeeper = useScorekeeper(game);
   const [rosterTab, setRosterTab] = useState<RosterTab>("home");
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
   const actionGridRef = useRef<HTMLDivElement>(null);
 
   const allPlayers = useMemo(() => [...homePlayers, ...awayPlayers], [homePlayers, awayPlayers]);
@@ -63,6 +65,8 @@ export function ScorekeeperPanel({
     return { player, team, stats: winner };
   }, [scorekeeper.events, game.id, playersById, teamsById]);
 
+  const editingEvent = editingEventId ? scorekeeper.events.find((event) => event.id === editingEventId) ?? null : null;
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <ScorekeeperStickyBar
@@ -72,20 +76,12 @@ export function ScorekeeperPanel({
         homeScore={scorekeeper.homeScore}
         awayScore={scorekeeper.awayScore}
         quarter={scorekeeper.quarter}
-        clockSeconds={scorekeeper.clockSeconds}
-        running={scorekeeper.running}
         onUndo={scorekeeper.undoLast}
         canUndo={scorekeeper.events.length > 0}
       />
 
       <div className="mx-auto max-w-5xl px-3 pb-16 pt-4 sm:px-6">
-        <ScorekeeperControls
-          quarter={scorekeeper.quarter}
-          running={scorekeeper.running}
-          onToggleClock={scorekeeper.toggleClock}
-          onAdjustClock={scorekeeper.adjustClock}
-          onSetQuarter={scorekeeper.setQuarter}
-        />
+        <ScorekeeperControls quarter={scorekeeper.quarter} onSetQuarter={scorekeeper.setQuarter} />
 
         <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-5">
           <div className="space-y-5 lg:col-span-3">
@@ -145,11 +141,30 @@ export function ScorekeeperPanel({
               events={scorekeeper.events}
               playersById={playersById}
               teamsById={teamsById}
-              onRemove={scorekeeper.removeEvent}
+              onEdit={setEditingEventId}
             />
           </div>
         </div>
       </div>
+
+      {editingEvent && (
+        <EditEventModal
+          event={editingEvent}
+          homeTeam={homeTeam}
+          awayTeam={awayTeam}
+          homePlayers={homePlayers}
+          awayPlayers={awayPlayers}
+          onSave={(input) => {
+            scorekeeper.editEvent(input);
+            setEditingEventId(null);
+          }}
+          onDelete={(eventId) => {
+            scorekeeper.removeEvent(eventId);
+            setEditingEventId(null);
+          }}
+          onClose={() => setEditingEventId(null)}
+        />
+      )}
     </div>
   );
 }

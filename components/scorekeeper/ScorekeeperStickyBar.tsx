@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { formatGameClock, formatQuarterLabel } from "@/lib/utils/format";
+import { formatQuarterLabel } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import type { Game, Team } from "@/types";
 
 /**
- * Always-visible strip: score, clock and undo. This is the one thing a
+ * Always-visible strip: score, quarter and undo. This is the one thing a
  * scorekeeper needs glanceable at all times during a live game, so it stays
  * pinned to the top of the viewport while the roster/actions/events below
  * scroll freely underneath it.
@@ -16,8 +16,6 @@ export function ScorekeeperStickyBar({
   homeScore,
   awayScore,
   quarter,
-  clockSeconds,
-  running,
   onUndo,
   canUndo,
 }: {
@@ -27,8 +25,6 @@ export function ScorekeeperStickyBar({
   homeScore: number;
   awayScore: number;
   quarter: number;
-  clockSeconds: number;
-  running: boolean;
   onUndo: () => void;
   canUndo: boolean;
 }) {
@@ -61,19 +57,10 @@ export function ScorekeeperStickyBar({
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 pb-2.5 sm:px-6 sm:pb-3">
         <TeamScore team={awayTeam} score={awayScore} align="left" />
 
-        <div className="flex shrink-0 flex-col items-center gap-0.5 px-1">
-          <span className="whitespace-nowrap text-[9px] font-semibold uppercase tracking-widest text-white/40 sm:text-[10px]">
+        <div className="flex shrink-0 flex-col items-center gap-1 px-1">
+          <span className="whitespace-nowrap rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white/70 sm:text-xs">
             {formatQuarterLabel(quarter)}
           </span>
-          <span className="font-mono text-2xl font-bold tabular-nums text-white sm:text-3xl">
-            {formatGameClock(Math.floor(clockSeconds / 60), clockSeconds % 60)}
-          </span>
-          {running && (
-            <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-emerald-400">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-              En marcha
-            </span>
-          )}
         </div>
 
         <TeamScore team={homeTeam} score={homeScore} align="right" />
