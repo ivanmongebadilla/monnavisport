@@ -20,7 +20,7 @@ export function GameEventList({
       {reversed.length === 0 ? (
         <p className="py-6 text-center text-sm text-white/40">Aún no hay eventos registrados.</p>
       ) : (
-        <ul className="max-h-[420px] space-y-1.5 overflow-y-auto pr-1">
+        <ul className="space-y-1.5 lg:max-h-[420px] lg:overflow-y-auto lg:pr-1">
           {reversed.map((event) => {
             const player = playersById.get(event.playerId);
             const team = teamsById.get(event.teamId);

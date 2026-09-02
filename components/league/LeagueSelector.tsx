@@ -26,9 +26,9 @@ export function LeagueSelector() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="flex items-center gap-2 rounded-full border border-border-subtle bg-surface px-3 py-1.5 text-sm font-semibold transition-colors hover:border-foreground/30"
+        className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-border-subtle bg-surface px-2.5 py-1.5 text-xs font-semibold transition-colors hover:border-foreground/30 sm:px-3 sm:text-sm"
       >
-        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: current.colorPrimary }} />
+        <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: current.colorPrimary }} />
         {current.shortName}
         <span className="text-text-faint">▾</span>
       </button>
