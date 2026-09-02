@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TeamLogo } from "@/components/teams/TeamLogo";
+import { ScrollHintTable } from "@/components/ui/ScrollHintTable";
 import { cn } from "@/lib/utils/cn";
 import type { Standing, Team } from "@/types";
 
@@ -13,12 +14,11 @@ export function StandingsTable({
   highlightTeamId?: string;
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-border-subtle">
+    <ScrollHintTable>
       <table className="w-full min-w-[560px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-border-subtle text-left text-xs font-semibold uppercase tracking-wide text-text-faint">
-            <th className="px-4 py-3 font-semibold">#</th>
-            <th className="px-4 py-3 font-semibold">Equipo</th>
+            <th className="sticky left-0 z-10 bg-surface px-4 py-3 font-semibold">Equipo</th>
             <th className="px-3 py-3 text-center font-semibold">JJ</th>
             <th className="px-3 py-3 text-center font-semibold">G</th>
             <th className="px-3 py-3 text-center font-semibold">P</th>
@@ -30,19 +30,17 @@ export function StandingsTable({
           {standings.map((standing) => {
             const team = teamsById.get(standing.teamId);
             if (!team) return null;
+            const isHighlighted = standing.teamId === highlightTeamId;
             return (
               <tr
                 key={standing.teamId}
-                className={cn(
-                  "border-b border-border-subtle last:border-b-0",
-                  standing.teamId === highlightTeamId && "bg-surface-muted"
-                )}
+                className={cn("border-b border-border-subtle last:border-b-0", isHighlighted && "bg-surface-muted")}
               >
-                <td className="px-4 py-3 tabular-nums text-text-muted">{standing.rank}</td>
-                <td className="px-4 py-3">
+                <td className={cn("sticky left-0 z-10 px-4 py-3", isHighlighted ? "bg-surface-muted" : "bg-surface")}>
                   <Link href={`/teams/${team.id}`} className="flex items-center gap-2.5 font-semibold hover:underline">
+                    <span className="w-4 shrink-0 text-text-muted">{standing.rank}</span>
                     <TeamLogo team={team} size="sm" />
-                    {team.name}
+                    <span className="whitespace-nowrap">{team.name}</span>
                   </Link>
                 </td>
                 <td className="px-3 py-3 text-center tabular-nums text-text-muted">{standing.gamesPlayed}</td>
@@ -58,6 +56,6 @@ export function StandingsTable({
           })}
         </tbody>
       </table>
-    </div>
+    </ScrollHintTable>
   );
 }
