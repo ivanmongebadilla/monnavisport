@@ -12,7 +12,7 @@ export function RosterGrid({
   players: Player[];
   selectedPlayerId: string | null;
   onSelect: (playerId: string) => void;
-  pointsByPlayer: Map<string, number>;
+  pointsByPlayer?: Map<string, number>;
 }) {
   return (
     <div>
@@ -23,7 +23,7 @@ export function RosterGrid({
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-3">
         {players.map((player) => {
           const isSelected = player.id === selectedPlayerId;
-          const points = pointsByPlayer.get(player.id) ?? 0;
+          const points = pointsByPlayer?.get(player.id) ?? 0;
           return (
             <button
               key={player.id}
