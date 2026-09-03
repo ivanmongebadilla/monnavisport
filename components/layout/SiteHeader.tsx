@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { NavLink } from "./NavLink";
-import { LeagueSelector } from "@/components/league/LeagueSelector";
 import { useSelectedLeague } from "@/components/league/LeagueProvider";
 
 export function SiteHeader() {
@@ -31,7 +30,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <LeagueSelector />
           <Link
             href="/admin"
             aria-label="Administración"
